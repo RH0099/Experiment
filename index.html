@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <title>Phishing Website Checker</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#0b1020;color:#e8ebff}
+    .container{max-width:1000px;margin:40px auto;padding:20px}
+    h1{font-size:30px;margin-bottom:10px}
+    p{color:#c9cffc}
+    .card{background:#111733;border-radius:14px;padding:20px;box-shadow:0 10px 30px rgba(0,0,0,.3)}
+    input,button{width:100%;padding:12px;border-radius:10px;border:1px solid #2a3170;background:#0f1538;color:#fff;font-size:16px}
+    button{margin-top:10px;background:#5b6cff;border:none;cursor:pointer}
+    button:hover{opacity:.9}
+    .result{margin-top:20px}
+    .badge{display:inline-block;padding:6px 12px;border-radius:999px;font-size:14px}
+    .high{background:#ff4d4d}
+    .medium{background:#ffb020;color:#000}
+    .low{background:#4caf50}
+    .functions{margin-top:25px;display:none}
+    .func{background:#0f1538;border:1px solid #2a3170;border-radius:12px;padding:15px;margin-bottom:12px}
+    .func h3{margin:0 0 6px 0}
+    footer{margin-top:30px;font-size:13px;opacity:.7;text-align:center}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🔍 Phishing Website Checker</h1>
+    <p>এই সিস্টেমটি <b>ফ্রন্টএন্ড ভিত্তিক heuristic analysis</b> ব্যবহার করে ফিশিং ওয়েবসাইট শনাক্ত করে।</p>
+
+    <div class="card">
+      <label>ওয়েবসাইট URL দিন</label>
+      <input id="urlInput" placeholder="https://example.com">
+      <button onclick="checkPhishing()">Check Website</button>
+
+      <div id="analysis" class="result"></div>
+
+      <!-- Auto Functions -->
+      <div id="functions" class="functions">
+        <div class="func" id="f1">
+          <h3>1️⃣ Google Safe Browsing Report</h3>
+          <button onclick="openGSB()">Open Report Page</button>
+        </div>
+        <div class="func" id="f2">
+          <h3>2️⃣ VirusTotal Submit</h3>
+          <button onclick="openVT()">Open VirusTotal</button>
+        </div>
+        <div class="func" id="f3">
+          <h3>3️⃣ Hosting Provider Abuse Email</h3>
+          <button onclick="openHostingReport()">Generate Email</button>
+        </div>
+        <div class="func" id="f4">
+          <h3>4️⃣ Domain Registrar Report</h3>
+          <button onclick="openRegistrar()">Open Registrar Page</button>
+        </div>
+        <div class="func" id="f5">
+          <h3>5️⃣ Public Warning Page</h3>
+          <button onclick="openWarning()">Show Warning</button>
+        </div>
+      </div>
+    </div>
+    </div>
+
+    <footer>
+      ✔ Legal & Educational Use Only • Frontend Simulation
+    </footer>
+  </div>
+
+<script>
+function checkPhishing(){
+  const url = document.getElementById('urlInput').value.trim();
+  if(!url){alert('URL দিন');return}
+
+  let score = 0;
+  let flags = [];
+
+  if(url.startsWith('http://')){score++;flags.push('Insecure HTTP')}
+  if(url.length > 120){score++;flags.push('Very long URL')}
+  if(/login|verify|secure|account|update|free/gi.test(url)){score++;flags.push('Phishing keywords')}
+  if(/\.zip|\.click|\.top|\.live|\.xyz/gi.test(url)){score++;flags.push('Suspicious TLD')}
+
+  let risk = 'Low';
+  let cls = 'low';
+  if(score >= 3){risk = 'High'; cls = 'high'}
+  else if(score === 2){risk = 'Medium'; cls = 'medium'}
+
+  document.getElementById('analysis').innerHTML = `
+    <p>Risk Level: <span class="badge ${cls}">${risk}</span></p>
+    <ul>${flags.map(f=>`<li>${f}</li>`).join('') || '<li>No major red flags</li>'}</ul>
+  `;
+
+  // Auto open functions if phishing
+  if(risk === 'High'){
+    document.getElementById('functions').style.display = 'block';
+  }else{
+    document.getElementById('functions').style.display = 'none';
+  }
+}
+function openGSB(){
+  window.open('https://safebrowsing.google.com/safebrowsing/report_phish/?url='+encodeURIComponent(lastURL),'_blank');
+}
+function openVT(){
+  window.open('https://www.virustotal.com/gui/home/url','_blank');
+}
+function openHostingReport(){
+  const subject='Abuse Report: Phishing Website';
+  const body=`Reported URL: ${lastURL}
+Risk: High (Phishing)`;
+  window.location.href=`mailto:abuse@hostingprovider.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+}
+function openRegistrar(){
+  window.open('https://www.icann.org/compliance/complaint','_blank');
+}
+function openWarning(){
+  alert('⚠️ WARNING: '+lastURL+' is reported as a phishing website');
+}
+</script>
+</body>
+</html>
