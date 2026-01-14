@@ -1,119 +1,144 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-  <meta charset="UTF-8">
-  <title>Phishing Website Checker</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
-    body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#0b1020;color:#e8ebff}
-    .container{max-width:1000px;margin:40px auto;padding:20px}
-    h1{font-size:30px;margin-bottom:10px}
-    p{color:#c9cffc}
-    .card{background:#111733;border-radius:14px;padding:20px;box-shadow:0 10px 30px rgba(0,0,0,.3)}
-    input,button{width:100%;padding:12px;border-radius:10px;border:1px solid #2a3170;background:#0f1538;color:#fff;font-size:16px}
-    button{margin-top:10px;background:#5b6cff;border:none;cursor:pointer}
-    button:hover{opacity:.9}
-    .result{margin-top:20px}
-    .badge{display:inline-block;padding:6px 12px;border-radius:999px;font-size:14px}
-    .high{background:#ff4d4d}
-    .medium{background:#ffb020;color:#000}
-    .low{background:#4caf50}
-    .functions{margin-top:25px;display:none}
-    .func{background:#0f1538;border:1px solid #2a3170;border-radius:12px;padding:15px;margin-bottom:12px}
-    .func h3{margin:0 0 6px 0}
-    footer{margin-top:30px;font-size:13px;opacity:.7;text-align:center}
-  </style>
+<meta charset="UTF-8">
+<title>Auto Phishing & Abuse Detection System</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#070b1a;color:#e6e9ff}
+.container{max-width:1100px;margin:40px auto;padding:20px}
+h1{font-size:32px;margin-bottom:6px}
+p{color:#b8c0ff}
+.card{background:#0f1538;border-radius:16px;padding:22px;box-shadow:0 20px 50px rgba(0,0,0,.4)}
+input,button{width:100%;padding:14px;border-radius:12px;border:1px solid #2b347a;background:#11184a;color:#fff;font-size:16px}
+button{margin-top:12px;background:#5b6cff;border:none;cursor:pointer;font-weight:bold}
+button:hover{opacity:.9}
+.result{margin-top:20px}
+.badge{display:inline-block;padding:6px 14px;border-radius:999px;font-size:14px}
+.high{background:#ff4d4d}
+.medium{background:#ffb020;color:#000}
+.low{background:#4caf50}
+.section{margin-top:26px;display:none}
+.block{background:#11184a;border:1px solid #2b347a;border-radius:14px;padding:16px;margin-bottom:14px}
+.block h3{margin:0 0 8px 0}
+textarea{width:100%;height:110px;background:#0b102e;color:#fff;border-radius:10px;border:1px solid #2b347a;padding:10px}
+footer{text-align:center;font-size:13px;opacity:.7;margin-top:30px}
+</style>
 </head>
 <body>
-  <div class="container">
-    <h1>🔍 Phishing Website Checker</h1>
-    <p>এই সিস্টেমটি <b>ফ্রন্টএন্ড ভিত্তিক heuristic analysis</b> ব্যবহার করে ফিশিং ওয়েবসাইট শনাক্ত করে।</p>
+<div class="container">
+<h1>🛡️ Auto Phishing & Abuse Detection</h1>
+<p>এই সিস্টেমটি <b>HTTPS সহ</b> ফিশিং, 18+ ও বিপজ্জনক ওয়েবসাইট শনাক্ত করে এবং <b>স্বয়ংক্রিয় রিপোর্টিং</b> প্রস্তুত করে।</p>
 
-    <div class="card">
-      <label>ওয়েবসাইট URL দিন</label>
-      <input id="urlInput" placeholder="https://example.com">
-      <button onclick="checkPhishing()">Check Website</button>
+<div class="card">
+<label>ওয়েবসাইট URL</label>
+<input id="url" placeholder="https://example.com">
+<button onclick="analyze()">Auto Analyze</button>
 
-      <div id="analysis" class="result"></div>
+<div id="output" class="result"></div>
 
-      <!-- Auto Functions -->
-      <div id="functions" class="functions">
-        <div class="func" id="f1">
-          <h3>1️⃣ Google Safe Browsing Report</h3>
-          <button onclick="openGSB()">Open Report Page</button>
-        </div>
-        <div class="func" id="f2">
-          <h3>2️⃣ VirusTotal Submit</h3>
-          <button onclick="openVT()">Open VirusTotal</button>
-        </div>
-        <div class="func" id="f3">
-          <h3>3️⃣ Hosting Provider Abuse Email</h3>
-          <button onclick="openHostingReport()">Generate Email</button>
-        </div>
-        <div class="func" id="f4">
-          <h3>4️⃣ Domain Registrar Report</h3>
-          <button onclick="openRegistrar()">Open Registrar Page</button>
-        </div>
-        <div class="func" id="f5">
-          <h3>5️⃣ Public Warning Page</h3>
-          <button onclick="openWarning()">Show Warning</button>
-        </div>
-      </div>
-    </div>
-    </div>
+<div id="reports" class="section">
 
-    <footer>
-      ✔ Legal & Educational Use Only • Frontend Simulation
-    </footer>
-  </div>
+<div class="block">
+<h3>1️⃣ Google Safe Browsing</h3>
+<button onclick="reportGSB()">Open Auto Report</button>
+</div>
+
+<div class="block">
+<h3>2️⃣ VirusTotal</h3>
+<button onclick="reportVT()">Open URL Scan</button>
+</div>
+
+<div class="block">
+<h3>3️⃣ Hosting Provider Abuse</h3>
+<textarea id="abuseMail"></textarea>
+<button onclick="sendMail()">Send Email</button>
+</div>
+
+<div class="block">
+<h3>4️⃣ Domain Registrar (ICANN)</h3>
+<button onclick="reportRegistrar()">Open Complaint</button>
+</div>
+
+<div class="block">
+<h3>5️⃣ Public Warning</h3>
+<textarea id="publicWarn"></textarea>
+<button onclick="showWarning()">Preview Warning</button>
+</div>
+
+</div>
+</div>
+
+<footer>✔ Legal • Educational • Defensive Use Only</footer>
+</div>
 
 <script>
-function checkPhishing(){
-  const url = document.getElementById('urlInput').value.trim();
-  if(!url){alert('URL দিন');return}
+let LAST_URL="";
+let RISK="Low";
+let CATEGORY="General";
 
-  let score = 0;
-  let flags = [];
+function analyze(){
+  const url=document.getElementById('url').value.trim();
+  if(!url){alert('URL দিন');return;}
+  LAST_URL=url;
 
-  if(url.startsWith('http://')){score++;flags.push('Insecure HTTP')}
-  if(url.length > 120){score++;flags.push('Very long URL')}
-  if(/login|verify|secure|account|update|free/gi.test(url)){score++;flags.push('Phishing keywords')}
-  if(/\.zip|\.click|\.top|\.live|\.xyz/gi.test(url)){score++;flags.push('Suspicious TLD')}
+  let score=0; let flags=[];
 
-  let risk = 'Low';
-  let cls = 'low';
-  if(score >= 3){risk = 'High'; cls = 'high'}
-  else if(score === 2){risk = 'Medium'; cls = 'medium'}
-
-  document.getElementById('analysis').innerHTML = `
-    <p>Risk Level: <span class="badge ${cls}">${risk}</span></p>
-    <ul>${flags.map(f=>`<li>${f}</li>`).join('') || '<li>No major red flags</li>'}</ul>
-  `;
-
-  // Auto open functions if phishing
-  if(risk === 'High'){
-    document.getElementById('functions').style.display = 'block';
-  }else{
-    document.getElementById('functions').style.display = 'none';
+  if(/https?:\/\/(\d{1,3}\.){3}\d{1,3}/.test(url)){
+    score+=3; flags.push('IP based URL');
   }
+
+  if(/login|verify|secure|account|bank|update|signin|free|bonus/gi.test(url)){
+    score+=2; CATEGORY='Phishing'; flags.push('Phishing keywords');
+  }
+
+  if(/adult|porn|xxx|sex|cam|nude|onlyfans|escort/gi.test(url)){
+    score+=3; CATEGORY='18+ / Adult'; flags.push('Adult content');
+  }
+
+  if(/\.zip|\.xyz|\.top|\.click|\.live|\.cam/gi.test(url)){
+    score++; flags.push('Suspicious TLD');
+  }
+
+  if(url.length>120){score++; flags.push('Very long URL');}
+
+  if(score>=5){RISK='High'}
+  else if(score>=3){RISK='Medium'}
+  else{RISK='Low'}
+
+  let cls=RISK.toLowerCase();
+
+  document.getElementById('output').innerHTML=`
+  <p>Risk Level: <span class="badge ${cls}">${RISK}</span></p>
+  <p>Category: <b>${CATEGORY}</b></p>
+  <ul>${flags.map(f=>`<li>${f}</li>`).join('')||'<li>No major red flags</li>'}</ul>`;
+
+  autoPrepareReports();
+  document.getElementById('reports').style.display='block';
 }
-function openGSB(){
-  window.open('https://safebrowsing.google.com/safebrowsing/report_phish/?url='+encodeURIComponent(lastURL),'_blank');
+
+function autoPrepareReports(){
+  document.getElementById('abuseMail').value=
+`Subject: Abuse Report (${CATEGORY})\n\nReported URL: ${LAST_URL}\nRisk Level: ${RISK}\nCategory: ${CATEGORY}\n\nThis website is suspected to be harmful and violates acceptable use policies.`;
+
+  document.getElementById('publicWarn').value=
+`⚠️ PUBLIC WARNING ⚠️\n\nThe website ${LAST_URL} has been identified as ${CATEGORY} with ${RISK} risk.\nUsers are advised to avoid interaction.`;
 }
-function openVT(){
-  window.open('https://www.virustotal.com/gui/home/url','_blank');
+
+function reportGSB(){
+  window.open('https://safebrowsing.google.com/safebrowsing/report_phish/?url='+encodeURIComponent(LAST_URL),'_blank');
 }
-function openHostingReport(){
-  const subject='Abuse Report: Phishing Website';
-  const body=`Reported URL: ${lastURL}
-Risk: High (Phishing)`;
-  window.location.href=`mailto:abuse@hostingprovider.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+function reportVT(){
+  window.open('https://www.virustotal.com/gui/search/'+encodeURIComponent(LAST_URL),'_blank');
 }
-function openRegistrar(){
+function sendMail(){
+  window.location.href='mailto:abuse@provider.com?body='+encodeURIComponent(document.getElementById('abuseMail').value);
+}
+function reportRegistrar(){
   window.open('https://www.icann.org/compliance/complaint','_blank');
 }
-function openWarning(){
-  alert('⚠️ WARNING: '+lastURL+' is reported as a phishing website');
+function showWarning(){
+  alert(document.getElementById('publicWarn').value);
 }
 </script>
 </body>
